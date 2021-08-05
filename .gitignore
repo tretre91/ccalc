@@ -1,0 +1,10 @@
+.vs/
+.vscode/
+
+*.cc
+*.hh
+
+*.obj
+*.ilk
+*.pdb
+*.exe
