@@ -1,7 +1,6 @@
 #ifndef DRIVER_HPP
 #define DRIVER_HPP
 
-#include <cmath>
 #include <cstddef>
 #include <functional>
 #include <istream>
@@ -10,6 +9,7 @@
 #include <unordered_map>
 
 #include "calc.tab.hh"
+#include "common.hpp"
 #include "scanner.hpp"
 
 namespace ccalc
@@ -41,30 +41,31 @@ namespace ccalc
         void setErrorFlag(bool err);
         bool getErrorFlag() const;
 
-        void addVariable(const std::string& name, float value);
-        float getVariable(const std::string& name) const;
-        float call(const std::string& name, const std::vector<float>& args) const;
+        void addVariable(const std::string& name, Float value);
+        Float getVariable(const std::string& name) const;
+        Float call(const std::string& name, const std::vector<Float>& args) const;
 
     private:
         ccalc::Parser* parser = nullptr;
         ccalc::Scanner* scanner = nullptr;
         ccalc::Mode driverMode = Mode::interactive;
         bool errorFlag = false;
-        std::unordered_map<std::string, float> variables = {{"pi", 3.141592653589793f}, {"e", 2.718281828459045f}};
-        const static std::unordered_map<std::string, std::function<float(const std::vector<float>&)>> functions;
+        std::unordered_map<std::string, Float> variables;
+        const static std::unordered_map<std::string, Float> predefinedVariables;
+        const static std::unordered_map<std::string, std::function<Float(const std::vector<Float>&)>> functions;
 
         void parse_helper(std::istream& stream);
     };
 
     namespace builtin
     {
-        float abs(const std::vector<float>& args);
-        float sqrt(const std::vector<float>& args);
-        float max(const std::vector<float>& args);
-        float min(const std::vector<float>& args);
-        float sin(const std::vector<float>& args);
-        float cos(const std::vector<float>& args);
-        float tan(const std::vector<float>& args);
+        Float abs(const std::vector<Float>& args);
+        Float sqrt(const std::vector<Float>& args);
+        Float max(const std::vector<Float>& args);
+        Float min(const std::vector<Float>& args);
+        Float sin(const std::vector<Float>& args);
+        Float cos(const std::vector<Float>& args);
+        Float tan(const std::vector<Float>& args);
     } // namespace builtin
 } // namespace ccalc
 

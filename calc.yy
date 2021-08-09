@@ -6,6 +6,8 @@
 %define api.parser.class {Parser}
 
 %code requires {
+    #include "common.hpp"
+    
     namespace ccalc {
         class Driver;
         class Scanner;
@@ -17,8 +19,6 @@
 
 %code {
     #include <iostream>
-    //#include <cstdlib>
-    #include <cmath>
     #include "driver.hpp"
     #undef yylex
     #define yylex scanner.yylex
@@ -28,8 +28,7 @@
 %define parse.assert
 
 // types
-%token <int> INT
-%token <float> FLOAT
+%token <ccalc::Float> FLOAT
 %token <std::string> ID
 // basic operations
 %token PLUS
@@ -47,10 +46,10 @@
 
 %locations
 
-%type <float> expr
-%type <float> terme
-%type <float> facteur
-%type <std::vector<float>> arglist
+%type <ccalc::Float> expr
+%type <ccalc::Float> terme
+%type <ccalc::Float> facteur
+%type <std::vector<ccalc::Float>> arglist
 
 %%
 
@@ -70,15 +69,14 @@ expr    : expr PLUS terme { $$ = $1 + $3; }
 
 terme   : terme MULT facteur { $$ = $1 * $3; }
         | terme DIV facteur { $$ = $1 / $3; }
-        | terme POWER facteur { $$ = std::powf($1, $3); }
-        | terme MOD facteur { $$ = std::fmodf($1, $3); }
+        | terme POWER facteur { $$ = mp::pow($1, $3); }
+        | terme MOD facteur { $$ = mp::fmod($1, $3); }
         | facteur
         | PLUS facteur { $$ = $2; }
         | MINUS facteur { $$ = -$2; }
         ;
 
 facteur : OP_PAR expr CL_PAR { $$ = $2; }
-        | INT { $$ = static_cast<float>($1); }
         | FLOAT
         | ID OP_PAR arglist CL_PAR {
                 try {
@@ -86,11 +84,11 @@ facteur : OP_PAR expr CL_PAR { $$ = $2; }
                 } catch (const std::invalid_argument& ia) {
                     error(scanner.getLocation(), "Function \"" + $1 + "\" takes " + ia.what());
                     driver.setErrorFlag(true);
-                    $$ = 0.0f;
+                    $$ = 0.0;
                 } catch (const ccalc::unknown_identifier& ui) {
                     error(scanner.getLocation(), ui.what());
                     driver.setErrorFlag(true);
-                    $$ = 0.0f;
+                    $$ = 0.0;
                 }
             }
         | ID { 
@@ -99,7 +97,7 @@ facteur : OP_PAR expr CL_PAR { $$ = $2; }
                 } catch (const ccalc::unknown_identifier& ui) {
                     error(scanner.getLocation(), ui.what());
                     driver.setErrorFlag(true);
-                    $$ = 0.0f;
+                    $$ = 0.0;
                 }
              }
         ;

@@ -1,10 +1,13 @@
 #include "driver.hpp"
 #include <algorithm>
+#include <boost/math/constants/constants.hpp>
 #include <fstream>
 #include <vector>
 
 namespace ccalc
 {
+    namespace mc = boost::math::constants;
+
     // class unknown_identifier
     unknown_identifier::unknown_identifier(const std::string& desc) : runtime_error(desc) {}
     unknown_identifier::unknown_identifier(const char* desc) : runtime_error(desc) {}
@@ -75,19 +78,20 @@ namespace ccalc
         return errorFlag;
     }
 
-    void Driver::addVariable(const std::string& name, float value) {
+    void Driver::addVariable(const std::string& name, Float value) {
         variables[name] = value;
     }
 
-    float Driver::getVariable(const std::string& name) const {
+    Float Driver::getVariable(const std::string& name) const {
         try {
-            return variables.at(name);
+            const auto p = predefinedVariables.find(name);
+            return p != predefinedVariables.end() ? p->second : variables.at(name);
         } catch (const std::out_of_range& e) {
             throw unknown_identifier("Variable \"" + name + "\" does not exist.");
         }
     }
 
-    float Driver::call(const std::string& name, const std::vector<float>& args) const {
+    Float Driver::call(const std::string& name, const std::vector<Float>& args) const {
         try {
             return functions.at(name)(args);
         } catch (const std::out_of_range& e) {
@@ -96,7 +100,14 @@ namespace ccalc
     }
 
     // clang-format off
-    const std::unordered_map<std::string, std::function<float(const std::vector<float>&)>> Driver::functions = {
+    const std::unordered_map<std::string, Float> Driver::predefinedVariables = {
+        {"pi", mc::pi<Float>()},
+        {"e", mc::e<Float>()},
+        {"degree", mc::degree<Float>()},
+        {"radian", mc::radian<Float>()}
+    };
+
+    const std::unordered_map<std::string, std::function<Float(const std::vector<Float>&)>> Driver::functions = {
         {"abs", builtin::abs},
         {"sqrt", builtin::sqrt},
         {"max", builtin::max},
@@ -110,46 +121,46 @@ namespace ccalc
     // Definition of built-in functions
     namespace builtin
     {
-        float abs(const std::vector<float>& args) {
+        Float abs(const std::vector<Float>& args) {
             if (args.size() != 1)
                 throw std::invalid_argument("exactly 1 argument.");
-            return std::fabs(args[0]);
+            return mp::abs(args[0]);
         }
 
-        float sqrt(const std::vector<float>& args) {
+        Float sqrt(const std::vector<Float>& args) {
             if (args.size() != 1)
                 throw std::invalid_argument("exactly 1 argument.");
-            return std::sqrtf(args[0]);
+            return mp::sqrt(args[0]);
         }
 
-        float max(const std::vector<float>& args) {
+        Float max(const std::vector<Float>& args) {
             if (args.size() < 2)
                 throw std::invalid_argument("at least 2 arguments.");
             return *std::max_element(args.begin(), args.end());
         }
 
-        float min(const std::vector<float>& args) {
+        Float min(const std::vector<Float>& args) {
             if (args.size() < 2)
                 throw std::invalid_argument("at least 2 arguments.");
             return *std::min_element(args.begin(), args.end());
         }
 
-        float sin(const std::vector<float>& args) {
+        Float sin(const std::vector<Float>& args) {
             if (args.size() != 1)
                 throw std::invalid_argument("exactly 1 argument.");
-            return std::sinf(args[0]);
+            return mp::sin(args[0]);
         }
 
-        float cos(const std::vector<float>& args) {
+        Float cos(const std::vector<Float>& args) {
             if (args.size() != 1)
                 throw std::invalid_argument("exactly 1 argument.");
-            return std::cosf(args[0]);
+            return mp::cos(args[0]);
         }
 
-        float tan(const std::vector<float>& args) {
+        Float tan(const std::vector<Float>& args) {
             if (args.size() != 1)
                 throw std::invalid_argument("exactly 1 argument.");
-            return std::tanf(args[0]);
+            return mp::tan(args[0]);
         }
     } // namespace builtin
 

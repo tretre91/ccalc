@@ -1,6 +1,7 @@
 %{
     #include <string>
     #include "scanner.hpp"
+    #include "common.hpp"
     #undef YY_DECL
     #define YY_DECL int ccalc::Scanner::yylex(ccalc::Parser::semantic_type* lval, ccalc::Parser::location_type* location)
     #define YY_USER_ACTION loc->step(); loc->columns(yyleng);
@@ -15,6 +16,7 @@ id [a-zA-Z][a-zA-Z_0-9]*
 number [0-9]+
 int (\+|-)?{number}
 float (\+|-)?({number}?\.{number}+|{number}+\.{number}?)
+sci_float ({int}|{float})[eE]{int}
 
 done "quit"|"exit"
 
@@ -28,9 +30,7 @@ done "quit"|"exit"
 
 {id} { yylval->emplace<std::string>(yytext); return token::ID; }
 
-{int} { yylval->emplace<int>(std::stoi(yytext)); return token::INT; }
-
-{float} { yylval->emplace<float>(std::stof(yytext)); return token::FLOAT; }
+{int}|{float}|{sci_float} { yylval->emplace<Float>(Float(yytext)); return token::FLOAT; }
 
 "+" { return token::PLUS; }
 "-" { return token::MINUS; }

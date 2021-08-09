@@ -2,20 +2,25 @@
 
 A command line calculator
 
-## Build (TODO)
+## Build
 
 Download the source code or clone the repository, and then navigate to the directory where the source code is located.
+This program depends on some boost header only libraries (multiprecision and math), make sure that they are installed.
 
 ### On Windows
 
-You should have [winflexbison](https://github.com/lexxmark/winflexbison) installed (at least 2.5.17) and developer command prompt available (it is installed with visual studio).
+You should have [winflexbison](https://github.com/lexxmark/winflexbison) installed (at least 2.5.17) and a developer command prompt available (it is installed with visual studio).
 
 Open a developer command prompt, navigate to the source code and type:
-```
-nmake ccalc
+```bash
+nmake ccalc BOOST_ROOT="path\to\boost"
+# for example
+nmake ccalc BOOST_ROOT="C:\Program Files\boost\boost_1_76_0"
 ```
 
 ### On Linux
+
+(TODO)
 
 ## Usage
 
@@ -48,7 +53,7 @@ Provide a filename to run commands contained in this file, let's say that the fi
 a = 2.5
 a - 1
 ```
-You would obtain the following output
+You would obtain the following output:
 ```
 $ ccalc script.txt
 2
@@ -60,6 +65,25 @@ $ ccalc script.txt
 ### Basic operations
 
 Basic operations (+, -, *, /) are supported, as well as exponentiation (^ or **) and modulo (%).
+
+### Numeric values
+
+Valid numeric values are ints and floats (both in decimal and scientific notation):
+
+```
+>> 2
+2
+>> 2.53
+2.53
+>> 3.
+3
+>> .5
+0.5
+>> 1.3e2
+130
+>> 1.3E2
+130
+```
 
 ### Variables
 
@@ -94,16 +118,18 @@ Some mathematical functions are supported (see the [list](#Built-in-functions) b
 5
 ```
 
-#### Predefined variables
+### Predefined variables
 
-note that the value for these variables can be inaccurate at a certain level of precision due to the way floating point numbers work (simple precision floating point numbers are used).
+These constants are from boost's [mathematical constants](https://www.boost.org/doc/libs/1_76_0/libs/math/doc/html/math_toolkit/constants.html).
 
 | name | value | description |
 |---|---|---|
-| pi | 3.141592653 | The constant π |
-| e | 2.718281746 | The constant e (or Euler number) |
+| pi | 3.14159 | The constant π |
+| e | 2.71828 | The constant e (or Euler number) |
+| degree | 0.017453 | 1 degree, expressed in radians (π / 180) |
+| radian | 57.2957 | 1 radian, expressed in degrees (π / 180) |
 
-#### Built-in functions
+### Built-in functions
 
 | name | description |
 |---|---|
@@ -114,4 +140,3 @@ note that the value for these variables can be inaccurate at a certain level of 
 | tan(v) | Computes the tangent of v |
 | min(v<sub>1</sub>, v<sub>2</sub>, ... , v<sub>n</sub>) | Returns the smallest value among v<sub>1</sub> ... v<sub>n</sub> (takes at least 2 values) |
 | max(v<sub>1</sub>, v<sub>2</sub>, ... , v<sub>n</sub>) | Returns the greatest value among v<sub>1</sub> ... v<sub>n</sub> (takes at least 2 values) |
-
