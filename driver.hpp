@@ -4,13 +4,16 @@
 #include <cstddef>
 #include <functional>
 #include <istream>
-#include <stdexcept>
 #include <string>
 #include <unordered_map>
+#include <vector>
 
-#include "calc.tab.hh"
 #include "common.hpp"
-#include "scanner.hpp"
+#include "exceptions.hpp"
+#include "parser.hh"
+#undef YY_DECL
+#define YY_DECL ccalc::Parser::symbol_type yylex(ccalc::Driver& driver)
+YY_DECL;
 
 namespace ccalc
 {
@@ -21,40 +24,32 @@ namespace ccalc
         eval
     };
 
-    class unknown_identifier : public std::runtime_error
-    {
-    public:
-        unknown_identifier(const std::string& desc);
-        unknown_identifier(const char* desc);
-    };
-
     class Driver
     {
     public:
         Driver() = default;
-        virtual ~Driver();
 
         void parse(const std::string& filename);
-        void parse(std::istream& is);
+        void parse(std::istream& stream);
+        void endParse();
 
         void setMode(Mode m);
-        void setErrorFlag(bool err);
-        bool getErrorFlag() const;
+        ccalc::location& getLocation();
 
         void addVariable(const std::string& name, Float value);
         Float getVariable(const std::string& name) const;
         Float call(const std::string& name, const std::vector<Float>& args) const;
+        void callSysFunction(const std::string& name, const std::vector<Float>& args) const;
 
     private:
-        ccalc::Parser* parser = nullptr;
-        ccalc::Scanner* scanner = nullptr;
+        ccalc::location loc;
         ccalc::Mode driverMode = Mode::interactive;
-        bool errorFlag = false;
         std::unordered_map<std::string, Float> variables;
+        bool shouldEnd = false;
+
         const static std::unordered_map<std::string, Float> predefinedVariables;
         const static std::unordered_map<std::string, std::function<Float(const std::vector<Float>&)>> functions;
-
-        void parse_helper(std::istream& stream);
+        const static std::unordered_map<std::string, std::function<void(const std::vector<Float>&)>> sysFunctions;
     };
 
     namespace builtin
@@ -67,6 +62,11 @@ namespace ccalc
         Float cos(const std::vector<Float>& args);
         Float tan(const std::vector<Float>& args);
     } // namespace builtin
+
+    namespace sys
+    {
+        void setPrecision(const std::vector<Float>& args);
+    } // namespace sys
 } // namespace ccalc
 
 #endif // !DRIVER_HPP

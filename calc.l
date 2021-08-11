@@ -1,17 +1,15 @@
 %{
     #include <string>
-    #include "scanner.hpp"
     #include "common.hpp"
-    #undef YY_DECL
-    #define YY_DECL int ccalc::Scanner::yylex(ccalc::Parser::semantic_type* lval, ccalc::Parser::location_type* location)
-    #define YY_USER_ACTION loc->step(); loc->columns(yyleng);
-    using token = ccalc::Parser::token;
+    #include "driver.hpp"
+    #include "parser.hh"
+    #define YY_USER_ACTION loc.step(); loc.columns(yyleng);
 %}
 
-%option c++ noyywrap nodefault
-%option yyclass="ccalc::Scanner"
+%option noyywrap
 
 id [a-zA-Z][a-zA-Z_0-9]*
+special_id _{id}
 
 number [0-9]+
 int (\+|-)?{number}
@@ -23,32 +21,58 @@ done "quit"|"exit"
 %%
 
 %{
-    yylval = lval;
+    ccalc::location& loc = driver.getLocation();
 %}
 
-{done} { setState(false); return token::YYEOF; }
+{done} { driver.endParse(); return ccalc::Parser::make_EOL(loc); }
 
-{id} { yylval->emplace<std::string>(yytext); return token::ID; }
+{id} { return ccalc::Parser::make_ID(yytext, loc); }
 
-{int}|{float}|{sci_float} { yylval->emplace<Float>(Float(yytext)); return token::FLOAT; }
+{special_id} { return ccalc::Parser::make_SPEC_ID(yytext + 1, loc); }
 
-"+" { return token::PLUS; }
-"-" { return token::MINUS; }
-"*" { return token::MULT; }
-"/" { return token::DIV; }
-"=" { return token::EQ; }
-"(" { return token::OP_PAR; }
-")" { return token::CL_PAR; }
-"," { return token::COMMA; }
-"^"|"**" { return token::POWER; }
-"%" { return token::MOD; }
+{int}|{float}|{sci_float} { return ccalc::Parser::make_FLOAT(ccalc::Float(yytext), loc); }
 
-\n { loc->lines(); return 0; }
+"+" { return ccalc::Parser::make_PLUS(loc); }
+"-" { return ccalc::Parser::make_MINUS(loc); }
+"*" { return ccalc::Parser::make_MULT(loc); }
+"/" { return ccalc::Parser::make_DIV(loc); }
+"=" { return ccalc::Parser::make_EQ(loc); }
+"(" { return ccalc::Parser::make_OP_PAR(loc); }
+")" { return ccalc::Parser::make_CL_PAR(loc); }
+"," { return ccalc::Parser::make_COMMA(loc); }
+"^"|"**" { return ccalc::Parser::make_POWER(loc); }
+"%" { return ccalc::Parser::make_MOD(loc); }
 
-<<EOF>> { setState(false); return token::YYEOF; }
+\n { loc.lines(); return ccalc::Parser::make_EOL(loc); }
 
-[ \t\r] {}
+<<EOF>> { return ccalc::Parser::make_EOL(loc); }
 
-. {}
+[ \t\r]+ {}
+
+. { return ccalc::Parser::make_LEX_ERROR(std::string("Unknown token \"") + yytext + "\"", loc); }
 
 %%
+
+void ccalc::Driver::parse(std::istream& stream) {
+    shouldEnd = false;
+    if (!stream || stream.eof()) {
+        return;
+    }
+    ccalc::Parser parser(*this);
+    std::string buffer;
+
+    if (driverMode == Mode::eval) {
+        std::getline(stream, buffer);
+        yy_scan_string(buffer.c_str());
+        parser.parse();
+        yy_delete_buffer(YY_CURRENT_BUFFER);
+    } else {
+        const std::string prompt = driverMode == Mode::interactive ? ">> " : "";
+        auto getInput = [&buffer,&stream,&prompt]() -> bool { std::cout << prompt; return static_cast<bool>(std::getline(stream, buffer)); };
+        while (!shouldEnd && getInput()) {
+            yy_scan_string(std::string(buffer + '\n').c_str());
+            parser.parse();
+            yy_delete_buffer(YY_CURRENT_BUFFER);
+        }
+    }
+}

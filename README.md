@@ -5,7 +5,7 @@ A command line calculator
 ## Build
 
 Download the source code or clone the repository, and then navigate to the directory where the source code is located.
-This program depends on some boost header only libraries (multiprecision and math), make sure that they are installed.
+This program depends on some boost header only libraries (multiprecision and math), make sure that you have boost libraries available on your system (they can be downloaded [here](https://www.boost.org/users/download/)).
 
 ### On Windows
 
@@ -33,7 +33,7 @@ $ ccalc
 >> min(1, -2, a)
 -2
 ```
-Input the command `exit` or `quit` to close the session.
+Input the command `exit` or `quit` to close the session, you can also press `ctrl` + `z` and then `enter` on Windows.
 
 Use the `-e` or `--eval` option to evaluate a single expression:
 ```
@@ -68,7 +68,7 @@ Basic operations (+, -, *, /) are supported, as well as exponentiation (^ or **)
 
 ### Numeric values
 
-Valid numeric values are ints and floats (both in decimal and scientific notation):
+Valid numeric values are integers and floats (both in decimal and scientific notation):
 
 ```
 >> 2
@@ -122,21 +122,25 @@ Some mathematical functions are supported (see the [list](#Built-in-functions) b
 
 These constants are from boost's [mathematical constants](https://www.boost.org/doc/libs/1_76_0/libs/math/doc/html/math_toolkit/constants.html).
 
-| name | value | description |
+| name | value (6 significant digits) | description |
 |---|---|---|
 | pi | 3.14159 | The constant π |
 | e | 2.71828 | The constant e (or Euler number) |
 | degree | 0.017453 | 1 degree, expressed in radians (π / 180) |
-| radian | 57.2957 | 1 radian, expressed in degrees (π / 180) |
+| radian | 57.2957 | 1 radian, expressed in degrees (180 / π) |
 
 ### Built-in functions
 
 | name | description |
 |---|---|
-| sqrt(v) | Computes the square root of v |
+| **Basic functions** |
 | abs(v) | Computes the absolute value of v |
+| sqrt(v) | Computes the square root of v |
+| min(v<sub>1</sub>, v<sub>2</sub>, ... , v<sub>n</sub>) | Returns the smallest value among v<sub>1</sub> ... v<sub>n</sub> (takes at least 2 values) |
+| max(v<sub>1</sub>, v<sub>2</sub>, ... , v<sub>n</sub>) | Returns the greatest value among v<sub>1</sub> ... v<sub>n</sub> (takes at least 2 values) |
+| **Trigonometric functions** |
 | cos(v) | Computes the cosine of v |
 | sin(v) | Computes the sine of v |
 | tan(v) | Computes the tangent of v |
-| min(v<sub>1</sub>, v<sub>2</sub>, ... , v<sub>n</sub>) | Returns the smallest value among v<sub>1</sub> ... v<sub>n</sub> (takes at least 2 values) |
-| max(v<sub>1</sub>, v<sub>2</sub>, ... , v<sub>n</sub>) | Returns the greatest value among v<sub>1</sub> ... v<sub>n</sub> (takes at least 2 values) |
+| **System functions** | These functions do not return a value and therefore cannot be used in expressions |
+| \_setPrecision(v) | Sets the number of significant digits used in output, must be a positive value or 0 for the maximum number of digits |
