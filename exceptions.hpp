@@ -5,6 +5,9 @@
 
 namespace ccalc
 {
+    /**
+     * @brief Base class for ccalc exceptions
+     */
     class Exception : public std::runtime_error
     {
     public:
@@ -12,13 +15,19 @@ namespace ccalc
         Exception(const std::string& desc) : runtime_error(desc) {}
     };
 
-    class UnknownIdentifier : public Exception
+    /**
+     * @brief Exception thrown when an identifier (function or variable name) is undefined
+     */
+    class UndefinedIdentifier : public Exception
     {
     public:
-        UnknownIdentifier(const char* desc) : Exception(desc) {}
-        UnknownIdentifier(const std::string& desc) : Exception(desc) {}
+        UndefinedIdentifier(const char* desc) : Exception(desc) {}
+        UndefinedIdentifier(const std::string& desc) : Exception(desc) {}
     };
 
+    /**
+     * @brief Exception thrown when an argument to a function call is invalid
+     */
     class InvalidArgument : public Exception
     {
     public:

@@ -62,7 +62,7 @@ ligne   : expr { std::cout << $1 << '\n'; }
         | SPEC_ID OP_PAR arglist CL_PAR {
                 try {
                     driver.callSysFunction($1, $3);
-                } catch (const ccalc::UnknownIdentifier& ui) {
+                } catch (const ccalc::UndefinedIdentifier& ui) {
                     error(@1, ui.what());
                 } catch (const ccalc::InvalidArgument& ia) {
                     error(@3, ia.what());
@@ -98,7 +98,7 @@ facteur : OP_PAR expr CL_PAR { $$ = $2; }
         | ID OP_PAR arglist CL_PAR {
                 try {
                     $$ = driver.call($1, $3);
-                } catch (const ccalc::UnknownIdentifier& ui) {
+                } catch (const ccalc::UndefinedIdentifier& ui) {
                     error(@1, ui.what());
                     YYERROR;
                 } catch (const ccalc::InvalidArgument& ia) {
@@ -109,7 +109,7 @@ facteur : OP_PAR expr CL_PAR { $$ = $2; }
         | ID { 
                 try {
                     $$ = driver.getVariable($1);
-                } catch (const ccalc::UnknownIdentifier& ui) {
+                } catch (const ccalc::UndefinedIdentifier& ui) {
                     error(@1, ui.what());
                     YYERROR;
                 }

@@ -39,7 +39,7 @@ namespace ccalc
             const auto p = predefinedVariables.find(name);
             return p != predefinedVariables.end() ? p->second : variables.at(name);
         } catch (const std::out_of_range& e) {
-            throw UnknownIdentifier("Variable \"" + name + "\" does not exist.");
+            throw UndefinedIdentifier("Variable \"" + name + "\" does not exist.");
         }
     }
 
@@ -47,7 +47,7 @@ namespace ccalc
         try {
             return functions.at(name)(args);
         } catch (const std::out_of_range& e) {
-            throw UnknownIdentifier("\"" + name + "\" is not a function.");
+            throw UndefinedIdentifier("\"" + name + "\" is not a function.");
         }
     }
 
@@ -55,7 +55,7 @@ namespace ccalc
         try {
             sysFunctions.at(name)(args);
         } catch (const std::out_of_range& e) {
-            throw UnknownIdentifier("\"" + name + "\" is not a system function.");
+            throw UndefinedIdentifier("\"" + name + "\" is not a system function.");
         }
     }
 

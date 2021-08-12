@@ -142,5 +142,5 @@ These constants are from boost's [mathematical constants](https://www.boost.org/
 | cos(v) | Computes the cosine of v |
 | sin(v) | Computes the sine of v |
 | tan(v) | Computes the tangent of v |
-| **System functions** | These functions do not return a value and therefore cannot be used in expressions |
+| **System functions** | **Note:** These functions do not return a value and therefore cannot be used in expressions |
 | \_setPrecision(v) | Sets the number of significant digits used in output, must be a positive value or 0 for the maximum number of digits |
