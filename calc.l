@@ -11,10 +11,9 @@
 id [a-zA-Z][a-zA-Z_0-9]*
 special_id _{id}
 
-number [0-9]+
-int (\+|-)?{number}
-float (\+|-)?({number}?\.{number}+|{number}+\.{number}?)
-sci_float ({int}|{float})[eE]{int}
+int [0-9]+
+float ({int}?\.{int}+|{int}+\.{int}?)
+sci_float ({int}|{float})[eE](\+|-)?{int}
 
 done "quit"|"exit"
 
