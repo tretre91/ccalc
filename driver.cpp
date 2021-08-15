@@ -26,8 +26,20 @@ namespace ccalc
         driverMode = m;
     }
 
+    Mode Driver::getMode() const {
+        return driverMode;
+    }
+
     ccalc::location& Driver::getLocation() {
         return loc;
+    }
+
+    void ccalc::Driver::setLastResult(const Float& f) {
+        lastResult = f;
+    }
+
+    Float Driver::getLastResult() const {
+        return lastResult;
     }
 
     void Driver::addVariable(const std::string& name, Float value) {
@@ -112,19 +124,22 @@ namespace ccalc
         Float sin(const std::vector<Float>& args) {
             if (args.size() != 1)
                 throw InvalidArgument("Function \"sin\" takes exactly 1 argument.");
-            return mp::sin(args[0]);
+            const ccalc::Float res = mp::sin(args[0]);
+            return mp::abs(res) > std::numeric_limits<ccalc::Float>::epsilon() ? res : ccalc::Float(0);
         }
 
         Float cos(const std::vector<Float>& args) {
             if (args.size() != 1)
                 throw InvalidArgument("Function \"cos\" takes exactly 1 argument.");
-            return mp::cos(args[0]);
+            const ccalc::Float res = mp::cos(args[0]);
+            return mp::abs(res) > std::numeric_limits<ccalc::Float>::epsilon() ? res : ccalc::Float(0);
         }
 
         Float tan(const std::vector<Float>& args) {
             if (args.size() != 1)
                 throw InvalidArgument("Function \"tan\" takes exactly 1 argument.");
-            return mp::tan(args[0]);
+            // return mp::tan(args[0]);
+            return sin(args) / cos(args);
         }
     } // namespace builtin
 

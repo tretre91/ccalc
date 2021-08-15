@@ -57,7 +57,12 @@
 
 %%
 
-ligne   : expr { std::cout << $1 << '\n'; }
+ligne   : expr {
+                driver.setLastResult($1);
+                if (driver.getMode() != ccalc::Mode::test) {
+                    std::cout << $1 << '\n';
+                }
+            }
         | ID EQ expr { driver.addVariable($1, $3); }
         | SPEC_ID OP_PAR arglist CL_PAR {
                 try {

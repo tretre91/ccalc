@@ -21,13 +21,15 @@ namespace ccalc
      * @brief Modes in which the driver operates
      * - interactive : the program runs in an interactive session
      * - file        : only the results are printed
-     * - eval        : similir to file, except that only one line of input is processed
+     * - eval        : similar to file, except that only one line of input is processed
+     * - test        : used for the tests, prints nothing
      */
     enum class Mode
     {
         interactive,
         file,
-        eval
+        eval,
+        test
     };
 
     /**
@@ -62,10 +64,28 @@ namespace ccalc
         void setMode(Mode m);
 
         /**
+         * @brief Returns the driver's mode
+         * @return
+         */
+        Mode getMode() const;
+
+        /**
          * @brief Returns the driver's current location
          * @return The location of the last token processed by the scanner
          */
         ccalc::location& getLocation();
+
+        /**
+         * @brief Sets the last result
+         * @param f A Float
+         */
+        void setLastResult(const Float& f);
+
+        /**
+         * @brief Returns the result of the last expression
+         * @return The result of the last expression if it wasn't a variable assignement
+         */
+        Float getLastResult() const;
 
         /**
          * @brief Adds a variable
@@ -111,6 +131,7 @@ namespace ccalc
     private:
         ccalc::location loc;
         ccalc::Mode driverMode = Mode::interactive;
+        Float lastResult;
         std::unordered_map<std::string, Float> variables;
         bool shouldEnd = false;
 
