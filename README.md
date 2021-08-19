@@ -5,22 +5,44 @@ A command line calculator
 ## Build
 
 Download the source code or clone the repository, and then navigate to the directory where the source code is located.
-This program depends on some boost header only libraries (multiprecision and math), make sure that you have boost libraries available on your system (they can be downloaded [here](https://www.boost.org/users/download/)).
+This program depends on some boost header only libraries (multiprecision and math), make sure that you have boost libraries available on your system (they can be downloaded [here](https://www.boost.org/users/download/)) and that the `BOOST_ROOT` environment variable is correctly defined.
 
-### On Windows
+You should also have flex and bison installed.
 
-You should have [winflexbison](https://github.com/lexxmark/winflexbison) installed (at least 2.5.17) and a developer command prompt available (it is installed with visual studio).
+### CMake options
 
-Open a developer command prompt, navigate to the source code and type:
+- `CCALC_FLEX`: name of the flex program, default is "flex"
+- `CCALC_FLEX_FLAGS`: additional flags to pass to the flex exectable
+- `CCALC_BISON`: name of the bison executable, default is "bison"
+- `CCALC_BISON_FLAGS`: additional flags to pass to the bison executable
+- `CCALC_TESTS`: builds a test executable, default is `OFF`
+- `CCALC_ENABLE_CTEST`: registers the tests in CTest and enable some testing targets, default is `OFF`
+
+### Windows example
+
+Using [winflexbison](https://github.com/lexxmark/winflexbison):
+
 ```bash
-nmake ccalc BOOST_ROOT="path\to\boost"
-# for example
-nmake ccalc BOOST_ROOT="C:\Program Files\boost\boost_1_76_0"
+git clone https://github.com/tretre91/ccalc.git
+mkdir build
+cd build
+cmake ../ccalc -DCCALC_FLEX=win_flex -DCCALC_BISON=win_bison -DCCALC_FLEX_FLAGS="--wincompat"
+cmake --build .
+cmake --install .
 ```
 
-### On Linux
+### Linux example
 
-(TODO)
+Using [flex](https://github.com/westes/flex) and [gnu bison](https://www.gnu.org/software/bison/):
+
+```bash
+git clone https://github.com/tretre91/ccalc.git
+mkdir build
+cd build
+cmake ../ccalc
+cmake --build .
+camke --install .
+```
 
 ## Usage
 

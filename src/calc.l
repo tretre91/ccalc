@@ -1,7 +1,7 @@
 %{
     #include <string>
-    #include "common.hpp"
-    #include "driver.hpp"
+    #include <common.hpp>
+    #include <driver.hpp>
     #include "parser.hh"
     #define YY_USER_ACTION loc.step(); loc.columns(yyleng);
 %}

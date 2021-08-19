@@ -15,7 +15,7 @@
 %define parse.lac none
 
 %code requires {
-    #include "common.hpp"
+    #include <common.hpp>
     
     namespace ccalc {
         class Driver;
@@ -24,7 +24,7 @@
 
 %code {
     #include <iostream>
-    #include "driver.hpp"
+    #include <driver.hpp>
 }
 
 %param { Driver& driver }

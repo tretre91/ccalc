@@ -1,6 +1,10 @@
 .vs/
 .vscode/
 
+build/
+out/
+CMakeSettings.json
+
 *.cc
 *.hh
 
