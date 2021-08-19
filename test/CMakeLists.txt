@@ -5,7 +5,7 @@ CPMAddPackage(
   OPTIONS "BUILD_TESTING OFF" "CATCH_DEVELOPMENT_BUILD OFF" "CATCH_INSTALL_DOCS OFF" "CATCH_INSTALL_HELPERS OFF" "BUILD_TESTING OFF"
 )
 
-set(TEST_SOURCES main.cpp test_helper.cpp basic_functions.cpp trigonometric_functions.cpp)
+set(TEST_SOURCES main.cpp test_helper.cpp basic_operations.cpp basic_functions.cpp trigonometric_functions.cpp)
 
 foreach(FILE ${FLEX_OUTPUT})
   set_source_files_properties(${FILE} PROPERTIES GENERATED TRUE)
