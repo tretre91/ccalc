@@ -1,4 +1,5 @@
 #include "test_helper.hpp"
+#include <sstream>
 
 namespace mc = boost::math::constants;
 
@@ -17,6 +18,7 @@ const Approx Helper::root_three = Approx(root_3).margin(epsilon);
 const Approx Helper::one_over_root_three = Approx(ccalc::Float(1.0) / root_3).margin(epsilon);
 
 ccalc::Float eval(ccalc::Driver& driver, const std::string& expr) {
-    driver.parse(std::istringstream(expr));
+    std::istringstream is(expr);
+    driver.parse(is);
     return driver.getLastResult();
 }

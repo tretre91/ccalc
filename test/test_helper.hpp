@@ -4,7 +4,6 @@
 #include <boost/math/constants/constants.hpp>
 #include <catch2/catch.hpp>
 #include <driver.hpp>
-#include <sstream>
 
 class Helper
 {

@@ -44,7 +44,7 @@ namespace ccalc
          * @brief Parses the content of a file
          * @param filename A file containing the expressions to evaluate
          */
-        void parse(const std::string& filename);
+        void parse(std::string filename);
 
         /**
          * @brief Parses input from a stream

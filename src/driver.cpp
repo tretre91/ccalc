@@ -7,7 +7,7 @@ namespace ccalc
 {
     namespace mc = boost::math::constants;
 
-    void Driver::parse(const std::string& filename) {
+    void Driver::parse(std::string filename) {
         std::ifstream file(filename);
         if (!file) {
             std::cerr << "Failed to open file \"" << filename << "\"\n";

@@ -32,7 +32,8 @@ int main(int argc, char* argv[]) {
         driver.parse(std::cin);
     } else if (argParse({"-e", "--eval"})) {
         driver.setMode(ccalc::Mode::eval);
-        driver.parse(argParse({"-e", "--eval"}));
+        std::istringstream expr = argParse({"-e", "--eval"});
+        driver.parse(expr);
     } else if (argParse({"-f", "--file"})) {
         driver.setMode(ccalc::Mode::file);
         driver.parse(argParse({"-f", "--file"}).str());
