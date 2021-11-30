@@ -38,3 +38,5 @@
 *.exe   binary
 *.out   binary
 *.app   binary
+
+cmake/CPM.cmake linguist-vendored
