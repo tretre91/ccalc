@@ -50,6 +50,11 @@
 %token COMMA
 %token EOL 0
 
+%left MOD
+%left PLUS MINUS
+%left MULT DIV
+%left POWER
+
 %type <ccalc::Float> expr
 %type <ccalc::Float> terme
 %type <ccalc::Float> facteur
@@ -91,14 +96,14 @@ expr    : expr PLUS terme { $$ = $1 + $3; }
 
 terme   : terme MULT facteur { $$ = $1 * $3; }
         | terme DIV facteur { $$ = $1 / $3; }
-        | terme POWER facteur { $$ = mp::pow($1, $3); }
-        | terme MOD facteur { $$ = mp::fmod($1, $3); }
         | facteur
         ;
 
 facteur : OP_PAR expr CL_PAR { $$ = $2; }
         | PLUS facteur { $$ = $2; }
         | MINUS facteur { $$ = -$2; }
+        | facteur POWER facteur { $$ = mp::pow($1, $3); }
+        | facteur MOD facteur { $$ = mp::fmod($1, $3); }
         | FLOAT
         | ID OP_PAR arglist CL_PAR {
                 try {

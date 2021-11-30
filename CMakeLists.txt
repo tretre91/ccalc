@@ -14,7 +14,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/")
 option(CCALC_TESTS "Builds a test executable" OFF)
 option(CCALC_ENABLE_CTEST "Registers the tests in CTest and enable testing targets" OFF)
 
-find_package(Boost 1.67.0 REQUIRED)
+find_package(Boost 1.62.0 REQUIRED)
 
 include(CPM)
 include(GNUInstallDirs)
@@ -70,4 +70,4 @@ if(CCALC_TESTS)
   add_subdirectory(test)
 endif()
 
-install(FILES README.md DESTINATION ${CMAKE_INSTALL_DOCDIR})
+install(FILES "README.md" "LICENSE.md" DESTINATION ${CMAKE_INSTALL_DOCDIR})

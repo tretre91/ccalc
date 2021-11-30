@@ -50,7 +50,7 @@ namespace ccalc
         try {
             const auto p = predefinedVariables.find(name);
             return p != predefinedVariables.end() ? p->second : variables.at(name);
-        } catch (const std::out_of_range& e) {
+        } catch (const std::out_of_range&) {
             throw UndefinedIdentifier("Variable \"" + name + "\" does not exist.");
         }
     }
@@ -58,7 +58,7 @@ namespace ccalc
     Float Driver::call(const std::string& name, const std::vector<Float>& args) const {
         try {
             return functions.at(name)(args);
-        } catch (const std::out_of_range& e) {
+        } catch (const std::out_of_range&) {
             throw UndefinedIdentifier("\"" + name + "\" is not a function.");
         }
     }
@@ -66,7 +66,7 @@ namespace ccalc
     void Driver::callSysFunction(const std::string& name, const std::vector<Float>& args) const {
         try {
             sysFunctions.at(name)(args);
-        } catch (const std::out_of_range& e) {
+        } catch (const std::out_of_range&) {
             throw UndefinedIdentifier("\"" + name + "\" is not a system function.");
         }
     }
